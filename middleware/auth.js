@@ -11,7 +11,8 @@ let authObj = {};
 authObj.isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
         next();
-    } else {
+    }
+    else {
         res.render('landing', {flash: req.flash('error')});
     }
 };
@@ -19,7 +20,8 @@ authObj.isLoggedIn = (req, res, next) => {
 authObj.isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
         next();
-    } else {
+    }
+    else {
         res.status(404);
         res.render('404', {flash: req.flash('error')});
     }
@@ -28,7 +30,8 @@ authObj.isAuthenticated = (req, res, next) => {
 authObj.isAdmin = (req, res, next) => {
     if (DEV_VIEW_MODE === 'admin' || (req.isAuthenticated() && req.user.plan === 'Admin')) {
         next();
-    } else {
+    }
+    else {
         res.status(404);
         res.render('404');
     }
@@ -39,7 +42,8 @@ authObj.isPostAuthor = (req, res, next) => {
     Post.findById(req.params.id, (err, post) => {
         if (post.author.equals(req.user._id)) {
             next();
-        } else {
+        }
+        else {
             res.status(404);
             res.render('404', {user: req.user});
         }

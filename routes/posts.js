@@ -23,7 +23,8 @@ const upload = multer({
 
         if (validMimeType) {
             cb(null, true);
-        } else {
+        }
+        else {
             req.flash('posts', `File upload only supports ${fileTypes}. Try again with a valid file type.`);
             cb(null, false);
         }

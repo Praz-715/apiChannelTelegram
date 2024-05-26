@@ -3,7 +3,7 @@
 <head>
     <%- include('../layouts/head'); %>
 
-    <title>ThinkCorp - Home</title>
+    <title>TeguhCorp - Home</title>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
 
 <main>
     <!-- Hero Section -->
-    <section id="hero" class="text-center bg-light py-md-4">
+    <section id="hero" class="text-left bg-light py-md-4">
         <div class="container py-4 py-md-5">
             <h1 class="text-primary font-slab">
                 <i class="bi bi-cart3"></i>
@@ -29,6 +29,101 @@
             <p class="lead my-3">
                 Welcome to your dashboard.
             </p>
+                <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Tambahkan Channel
+  </button>
+  <% if (successMessages.length > 0) { %>
+    <% successMessages.forEach(function(message) { %>
+      <div class="alert alert-success my-1"><%= message %></div>
+    <% }); %>
+  <% } %>
+
+  <% if (errorMessages.length > 0) { %>
+    <% errorMessages.forEach(function(message) { %>
+      <div class="alert alert-danger my-1"><%= message %></div>
+    <% }); %>
+  <% } %>
+
+  <% if (myChannel.length > 0) { %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>id Chat</th>
+          <th>Channel Title</th>
+          <th>Status</th>
+          <th>Token</th>
+          <th>Test</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% myChannel.forEach(item => { %>
+          <tr>
+            <td><%= item.idchat %></td>
+            <td><%= item.title %></td>
+            <td><%= item.status ? 'active' : 'inactive' %></td>
+            <td><%= item.token %></td>
+            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#testFunction" data-bs-whatever="<%= item.title %>|<%= item.idchat %>">Send Message</button> </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No data available.</p>
+  <% } %>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Channel</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/addChannel" method="post">
+            <div class="modal-body">
+                <img src="assets/step5.png" width="100%" alt="">
+                <label class="form-label" for="chatid">Chat id</label>
+                <input type="number" class="form-control" name="chatid" id="chatid" placeholder="chat id" required>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="testFunction" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="post" action="/sendMessage">
+        <div class="modal-body">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Recipient:</label>
+              <input type="text" name="recipientName" class="form-control" id="recipient-name">
+              <input type="hidden" name="idchat" class="form-control" id="idchat">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Message:</label>
+              <textarea class="form-control" name="message" id="message-text"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Send message</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+  
+            
         </div>
     </section>
 
@@ -109,6 +204,28 @@
 
 <!-- Bundled JS: Bootstrap, jQuery, Lodash -->
 <script src="/scripts/bundle.js"></script>
+<script>
+    var exampleModal = document.getElementById('testFunction')
+    exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var recipient = button.getAttribute('data-bs-whatever').split('|')[0]
+    var idchat = button.getAttribute('data-bs-whatever').split('|')[1]
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modalBodyInput = exampleModal.querySelector('.modal-body input')
+    var modalidchat = exampleModal.querySelector('.modal-body #idchat')
+
+    modalTitle.textContent = 'New message to ' + recipient
+    modalBodyInput.value = recipient
+    modalidchat.value = idchat
+})
+
+</script>
 
 <!-- Custom JavaScript -->
 </body>

@@ -66,20 +66,26 @@ app.use(
         contentSecurityPolicy: false,
     })
 );
-app.use(flash());
+
 app.use(methodOverride('_method', {methods: ['POST', 'GET']})); // Process POST request suffixed with ?_method=DELETE or ?_method=PUT.
 app.use(morgan('dev'));
 app.use(session({
     name: 'qid',
     secret: process.env.SESSION_SECRET || 'dQw4w9WgXcQ', // run `node -e "console.log(crypto.randomBytes(32).toString('hex'))"` in console to generate secret.
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         maxAge: 1000 * 60 * 60 * 24 * 2 * 365 // 2 years
     }
 }));
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.successMessages = req.flash('success');
+    res.locals.errorMessages = req.flash('error');
+    next();
+});
 
 /* ----- Mongoose ----- */
 mongoose.connect(MONGO_URI, {
